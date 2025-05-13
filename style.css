@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #74b3eb;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: #eff4ab;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 400px;
+    text-align: center;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 80%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #218838;
+}
+
+#adviceBox {
+    margin-top: 20px;
+    text-align: left;
+}
+.advice-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+}
+
+.doctor-icon {
+    font-size: 2rem;
+}
+
+.advice-content {
+    flex: 1;
+}
+
+.advice-content h3 {
+    margin-bottom: 5px;
+    color: #007BFF;
+}
+
+.advice-content ul {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
