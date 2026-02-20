@@ -1,160 +1,186 @@
+// ML Model
+const net = new brain.NeuralNetwork();
+
+// List of 50+ symptoms
+const symptomList = [
+    "headache","fever","cold","cough","fatigue","nausea","vomiting",
+    "dizziness","sore throat","back pain","chest pain","diarrhea",
+    "constipation","rash","itching","sneezing","runny nose","body pain",
+    "joint pain","muscle pain","stomach ache","abdominal pain",
+    "loss of appetite","weight loss","weight gain","anxiety",
+    "depression","insomnia","blurred vision","ear pain","toothache",
+    "dry mouth","sweating","chills","high temperature","low energy",
+    "breathing problem","shortness of breath","heartburn",
+    "acidity","gas","bloating","burning sensation","swelling",
+    "redness","irritation","weakness","fainting","palpitations",
+    "cold hands","cold feet","tingling","numbness"
+];
+
+// Training Data
+net.train([
+    {
+        input: { fever: 1, cough: 1, fatigue: 1 },
+        output: { flu: 1 }
+    },
+    {
+        input: { cold: 1, sneezing: 1, runny: 1 },
+        output: { cold: 1 }
+    },
+    {
+        input: { headache: 1, dizziness: 1 },
+        output: { headache: 1 }
+    },
+    {
+        input: { stomach: 1, nausea: 1, vomiting: 1 },
+        output: { stomach: 1 }
+    },
+    {
+        input: { chest: 1, breathing: 1 },
+        output: { chest: 1 }
+    }
+]);
+
 function getAdvice() {
-    const input = document.getElementById("healthInput").value.toLowerCase().trim();
+
+    const inputText = document
+        .getElementById("healthInput")
+        .value
+        .toLowerCase();
+
     const adviceBox = document.getElementById("adviceBox");
-    let advice = "";
 
     const doctorIcon = "👨‍⚕️";
 
+    // Convert text into ML inputs
+    let inputs = {};
+
+    symptomList.forEach(symptom => {
+        inputs[symptom] = inputText.includes(symptom) ? 1 : 0;
+    });
+
+    // Run ML prediction
+    const result = net.run(inputs);
+
+    let predictedDisease = Object.keys(result)
+        .reduce((a, b) => result[a] > result[b] ? a : b);
+
     const adviceData = {
-        "headache": {
-            steps: [
-                "Drink plenty of water",
-                "Rest in a quiet, dark room",
-                "Avoid screen time"
-            ],
-            medicine: [
-                "Take mild pain reliever like Paracetamol"
-            ],
-            precautions: [
-                "Avoid loud noise and bright lights",
-                "Consult a doctor if pain is severe or frequent"
-            ]
-        },
-        "cold": {
+
+        flu: {
             steps: [
                 "Drink warm fluids",
-                "Take steam inhalation",
+                "Take rest",
+                "Use steam inhalation"
+            ],
+            medicine: [
+                "Paracetamol",
+                "Cold relief tablets"
+            ],
+            precautions: [
+                "Avoid cold drinks",
+                "Stay warm"
+            ]
+        },
+
+        cold: {
+            steps: [
+                "Drink warm water",
+                "Take steam",
                 "Rest well"
             ],
             medicine: [
-                "Use OTC cold relief (e.g., Cetrizine, Paracetamol)"
+                "Cetrizine",
+                "Paracetamol"
             ],
             precautions: [
-                "Avoid cold food and drinks",
-                "Wash hands frequently"
+                "Avoid cold foods",
+                "Keep warm"
             ]
         },
-        "stomach ache": {
+
+        headache: {
             steps: [
-                "Drink clear fluids",
-                "Avoid solid food for a few hours",
-                "Apply a warm compress"
+                "Rest in quiet room",
+                "Drink water",
+                "Relax"
             ],
             medicine: [
-                "Use antacids or simethicone if needed"
+                "Paracetamol"
             ],
             precautions: [
-                "Avoid spicy/oily food",
-                "Consult a doctor if pain persists"
+                "Avoid stress",
+                "Limit screen time"
             ]
         },
-        "fever": {
+
+        stomach: {
             steps: [
-                "Stay hydrated",
-                "Get enough rest",
-                "Use cold compress if temperature is high"
+                "Drink fluids",
+                "Eat light food",
+                "Rest"
             ],
             medicine: [
-                "Paracetamol (500mg) every 6 hours if needed"
+                "Antacid"
             ],
             precautions: [
-                "Monitor temperature regularly",
-                "Avoid overexertion"
+                "Avoid spicy food",
+                "Stay hydrated"
             ]
         },
-        "cough": {
+
+        chest: {
             steps: [
-                "Drink warm water with honey",
-                "Use a humidifier",
-                "Gargle with salt water"
+                "Sit upright",
+                "Relax breathing",
+                "Rest"
             ],
             medicine: [
-                "Cough syrup (e.g., Benadryl or Honitus)"
+                "Consult doctor"
             ],
             precautions: [
-                "Avoid cold and dusty environments",
-                "Do not smoke"
-            ]
-        },
-        "back pain": {
-            steps: [
-                "Apply heat or cold packs",
-                "Do light stretching exercises",
-                "Use a supportive chair or cushion"
-            ],
-            medicine: [
-                "Mild painkillers like Ibuprofen (if no allergy)"
-            ],
-            precautions: [
-                "Avoid heavy lifting",
-                "Take frequent breaks from sitting"
-            ]
-        },
-        "sore throat": {
-            steps: [
-                "Gargle with warm salt water",
-                "Stay hydrated with warm drinks",
-                "Use throat lozenges"
-            ],
-            medicine: [
-                "Paracetamol or throat sprays"
-            ],
-            precautions: [
-                "Avoid smoking or cold drinks",
-                "Seek doctor if severe"
-            ]
-        },
-        "diarrhea": {
-            steps: [
-                "Drink ORS or electrolyte fluids",
-                "Eat bland food (banana, rice, toast)",
-                "Rest adequately"
-            ],
-            medicine: [
-                "ORS, Zinc tablets, and Loperamide if advised"
-            ],
-            precautions: [
-                "Avoid street food or unclean water",
-                "Maintain hand hygiene"
-            ]
-        },
-        "skin rash": {
-            steps: [
-                "Apply calamine lotion or aloe vera",
-                "Use mild soap for cleaning",
-                "Keep area dry"
-            ],
-            medicine: [
-                "Antihistamines (e.g., Cetrizine)",
-                "Hydrocortisone cream if prescribed"
-            ],
-            precautions: [
-                "Avoid scratching",
-                "Wear loose cotton clothing"
+                "Avoid exertion",
+                "Seek help if severe"
             ]
         }
     };
 
-    if (adviceData[input]) {
-        const { steps, medicine, precautions } = adviceData[input];
+    if (adviceData[predictedDisease]) {
 
-        advice = `
-            <div class="advice-container">
-                <div class="doctor-icon">${doctorIcon}</div>
-                <div class="advice-content">
-                    <h3>✅ Steps to Follow:</h3>
-                    <ul>${steps.map(s => `<li>${s}</li>`).join('')}</ul>
-                    <h3>💊 Medicine to Be Taken:</h3>
-                    <ul>${medicine.map(m => `<li>${m}</li>`).join('')}</ul>
-                    <h3>⚠️ Precautions to Cure:</h3>
-                    <ul>${precautions.map(p => `<li>${p}</li>`).join('')}</ul>
-                </div>
-                <div class="doctor-icon">${doctorIcon}</div>
+        const { steps, medicine, precautions }
+            = adviceData[predictedDisease];
+
+        adviceBox.innerHTML = `
+        <div class="advice-container">
+            <div class="doctor-icon">${doctorIcon}</div>
+            <div class="advice-content">
+
+                <h3>🧠 ML Prediction: ${predictedDisease}</h3>
+
+                <h3>Steps:</h3>
+                <ul>${steps.map(s => `<li>${s}</li>`).join("")}</ul>
+
+                <h3>Medicine:</h3>
+                <ul>${medicine.map(m => `<li>${m}</li>`).join("")}</ul>
+
+                <h3>Precautions:</h3>
+                <ul>${precautions.map(p => `<li>${p}</li>`).join("")}</ul>
+
             </div>
+            <div class="doctor-icon">${doctorIcon}</div>
+        </div>
         `;
-    } else {
-        advice = "❗ Sorry, we don't have advice for that issue. Please consult a healthcare professional.";
-    }
 
-    adviceBox.innerHTML = advice;
+    } else {
+        adviceBox.innerHTML =
+            "No advice found. Please consult a doctor.";
+    }
 }
+
+// Enter key support
+document
+.getElementById("healthInput")
+.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        getAdvice();
+    }
+});
